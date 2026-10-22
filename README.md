@@ -66,6 +66,21 @@ py -3.14 -m venv .venv
 
 Abra http://127.0.0.1:8000 (interface) ou http://127.0.0.1:8000/docs (Swagger).
 
+## Login (opcional)
+
+Por padrão o acesso é livre e a aplicação abre direto no painel. Para ativar a tela de login:
+
+1. Copie `.env.example` para `.env`.
+2. Defina `AUTH_EMAIL`, `AUTH_PASSWORD` e `AUTH_SECRET` (a chave que assina os tokens):
+
+   ```powershell
+   .\.venv\Scripts\python.exe -c "import secrets; print(secrets.token_hex(32))"   # gera o AUTH_SECRET
+   ```
+
+3. Reinicie o servidor. A API passa a exigir token (válido por 12 h) em `/documents` e `/ask`, e erros de senha repetidos são bloqueados por alguns minutos.
+
+O `.env` está no `.gitignore`: **nunca versione a senha**. Deixar `AUTH_PASSWORD` vazio desativa o login.
+
 ## Frontend (React + Vite)
 
 O código está em `frontend/`; o build (`app/static/`) já vem pronto e é servido pelo FastAPI, então **não precisa de Node para rodar**. Para mexer na interface:
