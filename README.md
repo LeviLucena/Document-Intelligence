@@ -29,7 +29,7 @@ flowchart LR
     F --> G[Busca por<br/>similaridade]
     E --> G
     G --> H[Top-k trechos<br/>numerados]
-    H --> I[LLM gera a resposta<br/>citando &#91;n&#93;]
+    H --> I["LLM gera a resposta<br/>citando as fontes"]
     I --> J[Resposta + fontes<br/>+ métricas]
 ```
 
