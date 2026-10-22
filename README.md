@@ -13,7 +13,41 @@
 
 ![alt text](https://i.ibb.co/N2vpdXJV/image.png)
 
-RAG para documentos empresariais: envie PDFs, faça perguntas em linguagem natural e receba respostas **com citações** (documento + página). FastAPI + Amazon Bedrock, com métricas de latência e consumo de tokens por pergunta.
+Aplicação de **RAG (Retrieval-Augmented Generation)** para análise de documentos empresariais. Você envia PDFs, faz perguntas em linguagem natural e recebe respostas **fundamentadas nos próprios documentos, com citação de fonte** (arquivo + página). Backend em FastAPI, interface em React e geração de respostas pelo **Amazon Bedrock**.
+
+O objetivo é responder com base no que está nos documentos, e não no conhecimento geral de um modelo: cada resposta traz os trechos usados, de onde vieram e quanto a consulta custou.
+
+### Como funciona
+
+```mermaid
+flowchart LR
+    A[PDF] --> B[Extração de texto<br/>por página]
+    B --> C[Chunking<br/>com sobreposição]
+    C --> D[Embeddings]
+    D --> E[(Índice vetorial<br/>NumPy em disco)]
+    Q[Pergunta] --> F[Embedding<br/>da pergunta]
+    F --> G[Busca por<br/>similaridade]
+    E --> G
+    G --> H[Top-k trechos<br/>numerados]
+    H --> I[LLM gera a resposta<br/>citando &#91;n&#93;]
+    I --> J[Resposta + fontes<br/>+ métricas]
+```
+
+1. **Indexação:** o PDF é lido página a página, dividido em trechos e convertido em vetores (embeddings).
+2. **Recuperação:** a pergunta vira um vetor e os trechos mais parecidos são buscados por similaridade de cosseno.
+3. **Geração:** o modelo recebe a pergunta e os trechos numerados, com a instrução de usar **somente** esse material e citar `[n]`. Sem base suficiente, deve dizer que não encontrou.
+4. **Transparência:** a tela mostra a resposta, os trechos recuperados (com página e score) e as referências, além da latência, dos tokens e do custo estimado.
+
+### Principais recursos
+
+- Upload de vários PDFs (também por arrastar e soltar), listagem e remoção de documentos.
+- Respostas com **citações clicáveis**: clicar em `[1]` destaca o trecho de origem.
+- **Métricas por pergunta:** latência de busca e de geração, tokens de entrada e saída e custo estimado em dólar, também registrados em log.
+- **Deep Search:** recupera 8 trechos em vez de 4, para perguntas que precisam de mais contexto.
+- **Login:** acesso protegido por e-mail e senha, com token assinado e limite de tentativas.
+- **Providers intercambiáveis:** `local` (sem custo e sem AWS) ou `bedrock`, trocados por uma variável de ambiente.
+
+> **Sobre o modo `local`:** ele existe para desenvolver e demonstrar o fluxo sem custo. A busca é por palavras em comum e a resposta é *extrativa* (junta frases dos trechos). A resposta redigida em linguagem natural exige o provider `bedrock`, cujo código está pronto e testado com simulação (`Stubber`), mas ainda não foi executado contra a AWS real.
 
 ![alt text](https://i.ibb.co/Vcntjspx/image.png)
 
