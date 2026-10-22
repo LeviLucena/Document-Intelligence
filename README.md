@@ -11,7 +11,7 @@
 ![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-![alt text](https://i.ibb.co/N2vpdXJV/image.png)
+![alt text](https://i.ibb.co/SDcfmnLv/image.png)
 
 Aplicação de **RAG (Retrieval-Augmented Generation)** para análise de documentos empresariais. Você envia PDFs, faz perguntas em linguagem natural e recebe respostas **fundamentadas nos próprios documentos, com citação de fonte** (arquivo + página). Backend em FastAPI, interface em React e geração de respostas pelo **Amazon Bedrock**.
 
